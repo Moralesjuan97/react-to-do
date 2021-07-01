@@ -4,7 +4,7 @@ import React from "react";
 export class Home extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { tasks: ["hacer cafe", "fubol", "cocinar"], newtask: "" };
+		this.state = { tasks: [], newtask: "" };
 		this.handleAddTask = this.handleAddTask.bind(this);
 		this.handleChangeTask = this.handleChangeTask.bind(this);
 	}
@@ -17,13 +17,24 @@ export class Home extends React.Component {
 	}
 
 	handleAddTask(event) {
-		if (event.key == "Enter" && this.state.newtask.length > 4) {
+		if (event.key == "Enter" && this.state.newtask.length > 2) {
 			this.setState({
 				tasks: [...this.state.tasks, this.state.newtask],
 				newtask: ""
 			});
 		}
 	}
+
+	handleDeleteTask = indexTask => {
+		let filtertask = this.state.tasks.filter(
+			(task, indexCurrentTask) => indexCurrentTask !== indexTask
+		);
+
+		this.setState({
+			...this.state,
+			tasks: filtertask
+		});
+	};
 
 	render() {
 		return (
@@ -38,7 +49,18 @@ export class Home extends React.Component {
 				/>
 				<ul>
 					{this.state.tasks.map((task, index) => {
-						return <li key={index}>{task}</li>;
+						return (
+							<li key={index}>
+								{task}
+								<button
+									type="button"
+									onClick={() =>
+										this.handleDeleteTask(index)
+									}>
+									X
+								</button>
+							</li>
+						);
 					})}
 				</ul>
 				<footer>Por realizar : {this.state.tasks.length}</footer>
